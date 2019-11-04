@@ -81,3 +81,59 @@ df <- df %>% mutate(...)
 leaflet(df) %>% ...
 ```
 
+
+
+--------------------------- (time permitting) ---------------------------
+
+# Fix these bad ggplots!
+```{r}
+if (!require(data.table)) { install.packages('data.table'); require(data.table) }
+if (!require(plyr)) { install.packages('plyr'); require(plyr) }
+```
+
+# TODO: With a partner, identify at least 2 issues for this plot. Then fix them!
+```{r}
+ggplot(mtcars, aes(x=cyl)) + geom_bar(fill='darkgoldenrod2') +
+  theme(panel.background = element_rect(fill = 'steelblue'),
+  panel.grid.major = element_line(colour = "firebrick", size=3),
+  panel.grid.minor = element_line(colour = "blue", size=1))
+```
+
+# TODO: With a partner, identify at least 2 issues for this plot. Then fix them!
+```{r}
+freq_cars_by_cyl <- as.data.frame(table(mtcars %>% select(cyl))) # freq table of # cars by cylinder
+colnames(freq_cars_by_cyl)[colnames(freq_cars_by_cyl) == "Var1"] <- "cyl" # rename col
+
+ggplot(as.data.frame(freq_cars_by_cyl),
+       aes(x = "", y = Freq, fill=cyl)) +
+  geom_bar(width=1, stat = 'identity')  + # create bar plot
+  coord_polar(theta="y") # turn to pie chart
+```
+
+# TODO: With a partner, identify at least 2 issues for this plot. Then fix them!
+```{r}
+ggplot(mtcars, aes(x=disp, y=hp)) + 
+    geom_point(
+        color="pink",
+        fill="blue",
+        shape=21,
+        alpha=0.5,
+        size=50,
+        stroke = 4
+        )
+```
+
+# TODO: With a partner, identify at least 2 issues for this plot. Then fix them!
+```{r}
+ggplot(mtcars) +
+  geom_point(aes(wt, hp, color=cyl)) +
+  scale_colour_gradient(low = "red", high="green")
+```
+
+# TODO: With a partner, identify at least 2 issues for this plot. Then fix them!
+_hint_: check out facet_grid
+```{r}
+head(iris)
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + geom_point(shape=4, size=20)
+```
+
