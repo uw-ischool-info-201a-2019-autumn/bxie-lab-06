@@ -1,0 +1,83 @@
+---
+title: "Exploring Seattle's Unreinforced Buildings"
+author: "bxie"
+date: "11/4/2019"
+---
+
+## Unreinforced Masonry Buildings in Seattle
+The City of Seattle has identified many buildings as in need of earthquake
+retrofitting. Let's see where they are and how bad it is!
+
+Data from [data.seattle.gov](https://data.seattle.gov/Permitting/Unreinforced-Masonry-Buildings/54qs-2h7f)
+
+For more info on ggplot2, see [ggplot quick ref](http://sape.inf.usi.ch/quick-reference/ggplot2/geom)
+
+```{r setup, include=FALSE, eval=FALSE}
+library(dplyr)
+library(ggplot2)
+library(leaflet)
+library(stringr)
+```
+
+Reading in data
+```{r cars}
+df <- read.csv("data/seattle_buildings.csv", stringsAsFactors = FALSE)
+View(df)
+```
+
+
+```{r}
+# simplifying risk categorization
+df <- df %>% mutate(risk = str_split(Preliminary.Risk.Category, " ")  %>% 
+                  as.data.frame() %>% 
+                  t %>% 
+                  data.frame(stringsAsFactors = F) %>% 
+                  pull(1))
+```
+
+Risk by neighborhood
+```{r}
+# TODO: In df_neighborhood, group by risk and Neighborhood and then summarize
+# the number of observerations in each group w/ n()
+df_neighborhood <- df %>% ...
+
+
+# TODO: add labels to the plot with labs() and ylab()
+ggplot(df_neighborhood, aes(fill=risk, y = n, x = Neighborhood)) + 
+  geom_bar(stat="identity") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) # rotate x axis labels
+
+# TODO: Now add 'position = "fill"' as a parameter in geom_bar. 
+# How does the plot change? What changes about the information conveyed?
+
+
+```
+
+Adding columns for map visualizations
+```{r}
+# TODO: View df and look at df$Long.Lat. How would you 
+# extract the information you need for map visualizations
+
+# Getting longitude and latitude from Long.Lat column
+lng_vec <- lapply(df$Long.Lat, function(x){
+  as.numeric(str_split(substr(x, 8, str_length(x)-1), " ")[[1]][1])
+})
+lat_vec <- lapply(df$Long.Lat, function(x){
+  as.numeric(str_split(substr(x, 8, str_length(x)-1), " ")[[1]][2])
+})
+df$lng <- unlist(lng_vec)
+df$lat <- unlist(lat_vec)
+
+```
+
+
+```{r}
+# TODO: create column "info" which has the address, a breakline ("<br>"), 
+# and risk level
+df <- df %>% mutate(...)
+
+# TODO: Starting with the leaflet of the df beflow, add tiles, and add markers specifying
+# longitude (lng), latitude (lng), and popup (info). Don't forget the tilde!
+leaflet(df) %>% ...
+```
+
